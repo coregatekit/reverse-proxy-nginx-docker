@@ -24,29 +24,39 @@ const products = [
   }
 ]
 
-app.use(cors())
+var whitelist = ['http://localhost:4200', 'http://frontend']
 
-app.get('/products', (req, res) => {
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (whitelist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
+
+app.get('/products', cors(corsOptionsDelegate), (req, res) => {
   res.json(products)
 })
 
-app.get('/products/:id', (req, res) => {
+app.get('/products/:id', cors(corsOptionsDelegate), (req, res) => {
   const { id } = req.params
   const result = products.find(product => product.id === id)
   res.json(result)
 })
 
-app.post('/products', (req, res) => {
+app.post('/products', cors(corsOptionsDelegate), (req, res) => {
   const payload = req.body
   res.json(payload)
 })
 
-app.put('/products/:id', (req, res) => {
+app.put('/products/:id', cors(corsOptionsDelegate), (req, res) => {
   const { id } = req.params
   res.json({ id })
 })
 
-app.delete('/products/:id', (req, res) => {
+app.delete('/products/:id', cors(corsOptionsDelegate), (req, res) => {
   const { id } = req.params
   res.json({ id })
 })
