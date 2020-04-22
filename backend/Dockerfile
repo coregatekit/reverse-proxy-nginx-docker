@@ -1,18 +1,13 @@
+FROM node:11-alpine
 
-FROM node:10-alpine
+RUN mkdir -p /usr/src/app
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+WORKDIR /usr/src/app
 
-WORKDIR /home/node/app
-
-COPY package*.json ./
-
-USER node
+COPY . .
 
 RUN npm install
 
-COPY --chown=node:node . .
-
 EXPOSE 9000
 
-CMD [ "node", "server.js" ]
+CMD ["npm", "run", "start"]
