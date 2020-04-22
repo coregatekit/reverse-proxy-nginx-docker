@@ -1,18 +1,20 @@
 version: '3.7'
 services:
-  # nginx:
-  #   container_name: nginx
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - "backend"
-  #     - "frontend"
-  #   volumes:
-  #     - ./nginx:/etc/nginx/conf.d
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   networks:
-  #     - reverse-proxy
+
+  nginx:
+    image: nginx:1.14.1
+    container_name: nginx
+    restart: unless-stopped
+    depends_on:
+      - "backend"
+      - "frontend"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - reverse-proxy
 
   backend:
     container_name: backend
@@ -31,10 +33,8 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports: 
-      - "80:80"
+      - "4200:80"
     restart: always
-    depends_on: 
-      - backend
     networks: 
       - reverse-proxy
 
